@@ -1,0 +1,22 @@
+[project]
+name = "pydisgit"
+version = "0.1.0"
+description = "Python port of GitHub webhook to discord proxy"
+authors = [
+  { name = "KyoriPowered" },
+]
+license = "Apache-2.0"
+readme = "README.md"
+requires-python = ">= 3.12"
+dependencies = [
+  "quart [dotenv] ~= 0.20.0",
+  "httpx (>=0.28.1,<0.29.0)",
+  "hypercorn (>=0.17.3,<0.18.0)"
+]
+
+[project.scripts]
+pydisgit = 'pydisgit:run_dev'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
