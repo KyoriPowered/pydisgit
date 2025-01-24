@@ -11,7 +11,7 @@ __slots__ = ['router']
 router = WebhookRouter()
 
 @router.handler('ping')
-def ping(zen, hook, repository, sender, organization) -> EmbedBody:
+def ping(zen, hook, repository, sender, organization=None) -> EmbedBody:
   is_org = hook['type'] == 'Organization'
   name =  organization['login'] if is_org else repository['full_name']
 
