@@ -1,0 +1,10 @@
+# /etc/systemd/system/pydisgit.socket
+[Unit]
+Description=Proxy socket for pydisgit
+PartOf=pydisgit.service
+
+[Socket]
+ListenStream=/run/pydisgit/pydisgit.sock
+
+[Install]
+WantedBy=sockets.target

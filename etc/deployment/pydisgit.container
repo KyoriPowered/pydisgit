@@ -1,0 +1,19 @@
+# /etc/containers/systemd/pydisgit.container
+[Unit]
+Description=GitHub webhook proxy for discord
+After=network.target pydisgit.socket
+Requires=pydisgit.socket
+
+[Container]
+Image=ghcr.io/kyoripowered/pydisgit:latest
+Exec=--bind fd://3
+AutoUpdate=registry
+UserNS=auto
+# this file should be put in whatever folder is common for your environment and/or distribution
+EnvironmentFile=/etc/sysconfig/%N
+
+[Service]
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target

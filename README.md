@@ -6,21 +6,31 @@ This additionally leaves it fully independent of the Cloudflare environment, and
 
 ## usage
 
-pydisgit is published to PyPI for use in more custom environments, and as a Docker image ready to go.
+pydisgit is published as a Docker image ready to go under `ghcr.io/kyoripowered/pydisgit:latest`.
 
 ### environment variables
-pydisgit has the following optional environment variables that you can use to customize your instance;
-- `IGNORED_BRANCHES_REGEX` - A regex pattern for branches that should be ignored
-- `IGNORED_BRANCHES` - A comma seperated list of branches that should be ignored
-- `IGNORED_USERS` - A comma seperated list of users that should be ignored
-- `IGNORED_PAYLOADS` - A comma seperated list of webhook events that should be ignored
+
+pydisgit has the following optional environment variables that you can use to customize your instance:
+
+- `PYDISGIT_IGNORED_BRANCHES_REGEX` - A regex pattern for branches that should be ignored
+- `PYDISGIT_IGNORED_BRANCHES` - A comma seperated list of branches that should be ignored
+- `PYDISGIT_IGNORED_USERS` - A comma seperated list of users that should be ignored
+- `PYDISGIT_IGNORED_PAYLOADS` - A comma seperated list of webhook events that should be ignored
+
+### deployment
+
+Some example unit files for deployment under Podman Quadlet with systemd socket activation behind an Ngnix reverse proxy are provided in the `[etc/deployment](etc/deployment) folder. By default, the docker image will bind to port 8000 if it's used on its own.
+
+We recommend choosing a webhook secret to prevent unauthorized users from exhausting the host server's available ratelimit space.
 
 ## licensing
 
 pydisgit is released under the terms of the Apache Software License version 2.0. Thanks additionally go out to JRoy and all other contributors to upstream disgit for making it what it is today.
 
 ## Supported Events
-The following webhook events are supported as of now;
+
+The following webhook events are supported as of now:
+
 * [check_run](https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads#check_run)
 * [commit_comment](https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads#commit_comment)
 * [create](https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads#create)

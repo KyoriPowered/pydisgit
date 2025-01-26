@@ -1,0 +1,11 @@
+# /etc/sysconfig/pydisgit
+
+# common
+PYDISGIT_IGNORED_BRANCH_REGEX='^gh-readonly-queue/.*'
+PYDISGIT_IGNORED_BRANCHES=''
+PYDISGIT_IGNORED_USERS='github-actions[bot],renovate[bot]'
+PYDISGIT_IGNORED_PAYLOADS='ping'
+
+# sekrit
+# PYDISGIT_GITHUB_WEBHOOK_SECRET='changeme'
+
