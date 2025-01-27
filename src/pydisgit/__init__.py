@@ -13,7 +13,7 @@ app = Quart(__name__)
 app.config.from_object(Config)
 app.config.from_prefixed_env(prefix="PYDISGIT")
 
-bound = BoundEnv(app.config)
+bound = BoundEnv(app.config, app.logger)
 
 from .handlers import router as free_handler_router
 handler_router = free_handler_router.bind(bound, app.logger)

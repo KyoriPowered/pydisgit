@@ -2,6 +2,7 @@
 Configuration for pydisgit
 """
 from typing import Optional
+import logging
 import re
 
 class Config:
@@ -30,13 +31,18 @@ class BoundEnv:
   __pastegg_api_key: str
   __github_webhook_secret: str;
 
-  def __init__(self, env):
+  def __init__(self, env, logger):
     self.__ignored_branch_pattern = re.compile(env['IGNORED_BRANCH_REGEX']) if 'IGNORED_BRANCH_REGEX' in env else None
     self.__ignored_branches = env['IGNORED_BRANCHES'].split(",")
     self.__ignored_users = env['IGNORED_USERS'].split(",")
     self.__ignored_payloads = env['IGNORED_PAYLOADS'].split(",")
     self.__pastegg_api_key = env['PASTE_GG_API_KEY']
     self.__github_webhook_secret = env['GITHUB_WEBHOOK_SECRET']
+
+    logger.info("Ignored branch pattern: %s", self.__ignored_branch_pattern)
+    logger.info("Ignored branches: %s", self.__ignored_branches)
+    logger.info("Ignored users: %s", self.__ignored_users)
+    logger.info("Ignored payloads: %s", self.__ignored_payloads)
 
   def ignored_branch(self, branch: str) -> bool:
     return (self.__ignored_branch_pattern
