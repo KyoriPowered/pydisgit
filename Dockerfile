@@ -1,5 +1,4 @@
-ARG pythonversion=3.13
-FROM python:${pythonversion}-slim as builder
+FROM python:3.13.1-slim as builder
 
 # environment
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -15,7 +14,7 @@ COPY src/ ./src/
 COPY README.md ./
 RUN poetry build -f wheel
 
-FROM python:${pythonversion}
+FROM python:3.13.1-slim
 
 ENV APP_NAME=pydisgit
 ENV HOME=/home/${APP_NAME}
