@@ -8,7 +8,7 @@ class Config:
   """
   Raw environment from Workers
   """
-  IGNORED_BRANCH_REGEX: str = ""
+  IGNORED_BRANCH_REGEX: str = "^$"
   IGNORED_BRANCHES: str = ""
   IGNORED_USERS: str = ""
   IGNORED_PAYLOADS: str = ""

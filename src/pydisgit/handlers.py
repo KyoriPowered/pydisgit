@@ -1,6 +1,7 @@
 """
 GH event handlers
 """
+import logging
 
 from .conf import BoundEnv
 from .util import short_commit, truncate
@@ -8,6 +9,7 @@ from .webhook import EmbedBody, Field, WebhookRouter
 
 __slots__ = ['router']
 
+logger = logging.getLogger(__name__)
 router = WebhookRouter()
 
 @router.handler('ping')
@@ -35,9 +37,11 @@ def check_completed(env: BoundEnv, check_run, repository, sender) -> EmbedBody:
   check_suite = check_run["check_suite"]
 
   if not repository or not (target := check_suite["head_branch"]):
+    logger.debug("No repo or no target (%s) for check run", target)
     return None
 
   if env.ignored_branch(target):
+    logger.debug("ignoring branch %s", target)
     return None
 
   if len(check_suite["pull_requests"]):
@@ -69,10 +73,10 @@ def check_completed(env: BoundEnv, check_run, repository, sender) -> EmbedBody:
     Field(name='Action Name', value = check_run["name"])
   ]
 
-  if "title" in output:
+  if "title" in output and output["title"]:
     fields.append(Field(name="Output Title", value=output["title"]))
 
-  if "summary" in output:
+  if "summary" in output and output["summary"]:
     fields.append(Field(name="Output Summary", value=output["summary"]))
 
   return EmbedBody(
@@ -80,9 +84,7 @@ def check_completed(env: BoundEnv, check_run, repository, sender) -> EmbedBody:
     html_url,
     sender,
     color,
-    None,
-    None,
-    None
+    fields=fields
   )
 
 commit_comment = router.by_action('commit_comment')

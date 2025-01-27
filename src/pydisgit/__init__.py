@@ -1,8 +1,8 @@
 from httpx import AsyncClient
+import pprint
 from quart import Quart, Response, request
 from werkzeug.exceptions import BadRequest
 
-from pydisgit.webhook import WebhookRouter
 from .conf import Config, BoundEnv
 
 Quart.__annotations__["http_client"] = AsyncClient
@@ -60,6 +60,7 @@ async def gh_hook(hook_id: str, token: str) -> dict:
     return 'Webhook NO-OP', 200
 
   if app.config['DEBUG']:
+    pprint.pprint(embed)
     pass
     # embed = await bound.buildDebugPaste(embed)
 
