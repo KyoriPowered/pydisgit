@@ -4,6 +4,7 @@ from quart import Quart, Response, request
 from werkzeug.exceptions import BadRequest
 
 from .conf import Config, BoundEnv
+from .hmac import HmacVerifyMiddleware
 
 Quart.__annotations__["http_client"] = AsyncClient
 app = Quart(__name__)
@@ -14,6 +15,7 @@ app.config.from_object(Config)
 app.config.from_prefixed_env(prefix="PYDISGIT")
 
 bound = BoundEnv(app.config, app.logger)
+app.asgi_app = HmacVerifyMiddleware(app.asgi_app, bound.github_webhook_secret)
 
 from .handlers import router as free_handler_router
 handler_router = free_handler_router.bind(bound, app.logger)
