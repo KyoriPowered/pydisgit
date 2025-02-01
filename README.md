@@ -13,9 +13,9 @@ pydisgit is published as a Docker image ready to go under `ghcr.io/kyoripowered/
 pydisgit has the following optional environment variables that you can use to customize your instance:
 
 - `PYDISGIT_IGNORED_BRANCHES_REGEX` - A regex pattern for branches that should be ignored
-- `PYDISGIT_IGNORED_BRANCHES` - A comma seperated list of branches that should be ignored
-- `PYDISGIT_IGNORED_USERS` - A comma seperated list of users that should be ignored
-- `PYDISGIT_IGNORED_PAYLOADS` - A comma seperated list of webhook events that should be ignored
+- `PYDISGIT_IGNORED_BRANCHES` - A comma separated list of branches that should be ignored
+- `PYDISGIT_IGNORED_USERS` - A comma separated list of users that should be ignored
+- `PYDISGIT_IGNORED_PAYLOADS` - A comma separated list of webhook events that should be ignored
 
 ### deployment
 
