@@ -19,7 +19,7 @@ class HmacVerifyMiddleware:
         hmac_secret
     ) -> None:
       self.app = app
-      self.__hmac_secret = hmac_secret.encode()
+      self.__hmac_secret = hmac_secret.encode() if hmac_secret else None
 
     async def __call__(self, scope: Scope, receive: Callable, send: Callable) -> None:
       if self.__hmac_secret is None or scope["type"] != "http" or len(scope["path"]) <= len("/health"):
@@ -44,9 +44,7 @@ class HmacVerifyMiddleware:
     def recv_proxy(self, digest: hmac.HMAC, expected: bytes, recv: Callable, send: Callable) -> Callable:
       async def responder() -> dict:
        response = await recv()
-       print("Response type: " + response["type"])
        if response["type"] == "http.request":
-          print(f"receive event, body is {response["body"]}")
           digest.update(response["body"])
           if not response["more_body"]:
              result = digest.hexdigest().encode()
