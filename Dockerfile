@@ -29,5 +29,5 @@ USER ${APP_NAME}
 COPY --from=builder dist/ ./dist/
 RUN pip install $(echo dist/*.whl)
 
-ENTRYPOINT [ "hypercorn", "asgi:pydisgit:app" ]
+ENTRYPOINT [ "hypercorn", "asgi:pydisgit:app", "-k", "uvloop" ]
 
