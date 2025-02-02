@@ -8,4 +8,3 @@ PYDISGIT_IGNORED_PAYLOADS='ping'
 
 # sekrit
 # PYDISGIT_GITHUB_WEBHOOK_SECRET='changeme'
-

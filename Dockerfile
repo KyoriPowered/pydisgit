@@ -30,4 +30,3 @@ COPY --from=builder dist/ ./dist/
 RUN pip install $(echo dist/*.whl)
 
 ENTRYPOINT [ "hypercorn", "asgi:pydisgit:app", "-k", "uvloop" ]
-
