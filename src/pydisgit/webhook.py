@@ -2,11 +2,11 @@
 Core logic for webhook handling
 """
 
+import inspect
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from logging import Logger
-from typing import Any, Optional, NamedTuple
-import inspect
+from typing import Any, NamedTuple, Optional
 
 from .conf import BoundEnv
 from .util import truncate
@@ -16,6 +16,7 @@ class Sender(NamedTuple):
   """
   GH API Sender representation
   """
+
   login: str
   html_url: str
   avatar_url: str
@@ -24,10 +25,12 @@ class Sender(NamedTuple):
   def from_json(cls, data: Any):
     return cls(data["login"], data["html_url"], data["avatar_url"])
 
+
 class Field(NamedTuple):
   """
   Discord API field representation
   """
+
   name: str
   value: str
   inline: bool = True
@@ -39,14 +42,16 @@ class Field(NamedTuple):
     return {
       "name": self.name,
       "value": truncate(self.value, 1000),
-      "inline": self.inline
+      "inline": self.inline,
     }
+
 
 @dataclass
 class EmbedBody:
   """
   Discord API embed representation
   """
+
   title: str
   url: Optional[str]
   sender: Sender
@@ -69,12 +74,14 @@ class EmbedBody:
           "author": {
             "name": truncate(self.sender.login, 255),
             "url": self.sender.html_url,
-            "icon_url": self.sender.avatar_url
+            "icon_url": self.sender.avatar_url,
           },
           "color": self.color,
           "footer": {
             "text": truncate(self.footer, 255),
-          } if self.footer else None,
+          }
+          if self.footer
+          else None,
           "fields": [f.to_json() for f in self.fields],
         }
       ]
@@ -83,8 +90,8 @@ class EmbedBody:
 
 type EventHandler = Callable[[BoundEnv, dict], Optional[EmbedBody]]
 
-class BoundRouter:
 
+class BoundRouter:
   def __init__(self, handlers: dict[str, EventHandler], env: BoundEnv, logger: Logger):
     self._handlers = handlers
     self._env = env
@@ -104,13 +111,15 @@ class BoundRouter:
 
     result = self._handlers[gh_hook_type](self._env, gh_data)
     if not result:
-      self._logger.debug("Produced no result for event type '%s' with payload '%s", gh_hook_type, gh_data)
+      self._logger.debug(
+        "Produced no result for event type '%s' with payload '%s", gh_hook_type, gh_data
+      )
       return None
 
     return result.to_json()
 
 
-class WebhookRouter():
+class WebhookRouter:
   __handlers: dict[str, EventHandler] = {}
 
   def bind(self, env: BoundEnv, logger: Logger) -> BoundRouter:
@@ -121,7 +130,16 @@ class WebhookRouter():
       sig = inspect.signature(func)
       final_data = dict(data)
       # if we don't have a kwargs field, remove any extra attributes from the args map
-      if len([v for v in sig.parameters.values() if v.kind == inspect.Parameter.VAR_KEYWORD]) == 0:
+      if (
+        len(
+          [
+            v
+            for v in sig.parameters.values()
+            if v.kind == inspect.Parameter.VAR_KEYWORD
+          ]
+        )
+        == 0
+      ):
         for k in data.keys():
           if k not in sig.parameters.keys():
             del final_data[k]
@@ -133,21 +151,26 @@ class WebhookRouter():
 
       # then call the actual handler
       return func(**final_data)
+
     return result
 
   def handler(self, event: str) -> Callable:
     """
     Decorator, function plus event name
     """
+
     def decorator(func):
       if event in self.__handlers:
         raise f"Already registered a handler for {event}!"
 
       self.__handlers[event] = self._wrap_func(func)
       return func
+
     return decorator
 
-  def by_action(self, event: str) -> Callable[[str], Callable[[EventHandler], EventHandler]]:
+  def by_action(
+    self, event: str
+  ) -> Callable[[str], Callable[[EventHandler], EventHandler]]:
     """
     Return a value that can be used as a decorator to dispatch handlers
     for ``event`` based on the provided action.
@@ -168,6 +191,7 @@ class WebhookRouter():
 
         dispatchers[action] = self._wrap_func(func)
         return func
+
       return decorator
 
     self.__handlers[event] = subhandler

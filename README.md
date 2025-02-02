@@ -23,6 +23,10 @@ Some example unit files for deployment under Podman Quadlet with systemd socket 
 
 We recommend choosing a webhook secret to prevent unauthorized users from exhausting the host server's available ratelimit space.
 
+## contributing
+
+We welcome contributions! You'll need Python 3.12 or newer in your environment, and the [poetry](https://python-poetry.org) dependency manager installed. We also recommend installing and enabling [pre-commit](https://pre-commit.com/#install) to automatically resolve any formatting issues as you work on the project. We use the [ruff](https://docs.astral.sh/ruff) linter for code style, you may benefit from one of its editor plugins.
+
 ## licensing
 
 pydisgit is released under the terms of the Apache Software License version 2.0. Thanks additionally go out to JRoy and all other contributors to upstream disgit for making it what it is today.

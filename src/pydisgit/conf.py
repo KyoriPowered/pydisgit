@@ -1,14 +1,16 @@
 """
 Configuration for pydisgit
 """
-from typing import Optional
-import logging
+
 import re
+from typing import Optional
+
 
 class Config:
   """
   Raw environment from Workers
   """
+
   IGNORED_BRANCH_REGEX: str = "^$"
   IGNORED_BRANCHES: str = ""
   IGNORED_USERS: str = ""
@@ -29,15 +31,17 @@ class BoundEnv:
   __ignored_users: list[str]
   __ignored_payloads: list[str]
   __pastegg_api_key: str
-  __github_webhook_secret: str;
+  __github_webhook_secret: str
 
   def __init__(self, env, logger):
-    self.__ignored_branch_pattern = re.compile(env['IGNORED_BRANCH_REGEX']) if 'IGNORED_BRANCH_REGEX' in env else None
-    self.__ignored_branches = env['IGNORED_BRANCHES'].split(",")
-    self.__ignored_users = env['IGNORED_USERS'].split(",")
-    self.__ignored_payloads = env['IGNORED_PAYLOADS'].split(",")
-    self.__pastegg_api_key = env['PASTE_GG_API_KEY']
-    self.__github_webhook_secret = env['GITHUB_WEBHOOK_SECRET']
+    self.__ignored_branch_pattern = (
+      re.compile(env["IGNORED_BRANCH_REGEX"]) if "IGNORED_BRANCH_REGEX" in env else None
+    )
+    self.__ignored_branches = env["IGNORED_BRANCHES"].split(",")
+    self.__ignored_users = env["IGNORED_USERS"].split(",")
+    self.__ignored_payloads = env["IGNORED_PAYLOADS"].split(",")
+    self.__pastegg_api_key = env["PASTE_GG_API_KEY"]
+    self.__github_webhook_secret = env["GITHUB_WEBHOOK_SECRET"]
 
     logger.info("Ignored branch pattern: %s", self.__ignored_branch_pattern)
     logger.info("Ignored branches: %s", self.__ignored_branches)
@@ -45,9 +49,9 @@ class BoundEnv:
     logger.info("Ignored payloads: %s", self.__ignored_payloads)
 
   def ignored_branch(self, branch: str) -> bool:
-    return (self.__ignored_branch_pattern
-          and self.__ignored_branch_pattern.match(branch)) \
-        or branch in self.__ignored_branches
+    return (
+      self.__ignored_branch_pattern and self.__ignored_branch_pattern.match(branch)
+    ) or branch in self.__ignored_branches
 
   def ignored_user(self, user: str) -> bool:
     return user in self.__ignored_users
@@ -61,6 +65,8 @@ class BoundEnv:
 
   async def build_debug_paste(self, embed: any) -> str:
     pass
+
+
 #     embed = JSON.stringify({
 #       "files": [
 #         {

@@ -33,5 +33,3 @@ jobs:
       - name: "docker / push"
         if: "${{ github.event_name == 'push' && steps.setup.outputs.publishing_branch != ''}}"
         run: "docker push ghcr.io/kyoripowered/pydisgit"
-
-
