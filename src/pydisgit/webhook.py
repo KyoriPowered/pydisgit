@@ -111,16 +111,17 @@ class BoundRouter:
 
     result = self._handlers[gh_hook_type](self._env, gh_data)
     if not result:
-      self._logger.debug(
-        "Produced no result for event type '%s' with payload '%s", gh_hook_type, gh_data
-      )
+      self._logger.debug("Produced no result for event type '%s' with payload '%s", gh_hook_type, gh_data)
       return None
 
     return result.to_json()
 
 
 class WebhookRouter:
-  __handlers: dict[str, EventHandler] = {}
+  __handlers: dict[str, EventHandler]
+
+  def __init__(self):
+    self.__handlers = {}
 
   def bind(self, env: BoundEnv, logger: Logger) -> BoundRouter:
     return BoundRouter(self.__handlers, env, logger)
@@ -130,16 +131,7 @@ class WebhookRouter:
       sig = inspect.signature(func)
       final_data = dict(data)
       # if we don't have a kwargs field, remove any extra attributes from the args map
-      if (
-        len(
-          [
-            v
-            for v in sig.parameters.values()
-            if v.kind == inspect.Parameter.VAR_KEYWORD
-          ]
-        )
-        == 0
-      ):
+      if len([v for v in sig.parameters.values() if v.kind == inspect.Parameter.VAR_KEYWORD]) == 0:
         for k in data.keys():
           if k not in sig.parameters.keys():
             del final_data[k]
@@ -168,9 +160,7 @@ class WebhookRouter:
 
     return decorator
 
-  def by_action(
-    self, event: str
-  ) -> Callable[[str], Callable[[EventHandler], EventHandler]]:
+  def by_action(self, event: str) -> Callable[[str], Callable[[EventHandler], EventHandler]]:
     """
     Return a value that can be used as a decorator to dispatch handlers
     for ``event`` based on the provided action.

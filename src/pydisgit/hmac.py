@@ -21,11 +21,7 @@ class HmacVerifyMiddleware:
     self.__hmac_secret = hmac_secret.encode() if hmac_secret else None
 
   async def __call__(self, scope: Scope, receive: Callable, send: Callable) -> None:
-    if (
-      self.__hmac_secret is None
-      or scope["type"] != "http"
-      or len(scope["path"]) <= len("/health")
-    ):
+    if self.__hmac_secret is None or scope["type"] != "http" or len(scope["path"]) <= len("/health"):
       await self.app(scope, receive, send)
       return
 
@@ -47,9 +43,7 @@ class HmacVerifyMiddleware:
       send,
     )
 
-  def recv_proxy(
-    self, digest: hmac.HMAC, expected: bytes, recv: Callable, send: Callable
-  ) -> Callable:
+  def recv_proxy(self, digest: hmac.HMAC, expected: bytes, recv: Callable, send: Callable) -> Callable:
     async def responder() -> dict:
       response = await recv()
       if response["type"] == "http.request":
@@ -58,20 +52,14 @@ class HmacVerifyMiddleware:
           result = digest.hexdigest().encode()
           if result != expected:
             # send error response
-            logger.debug(
-              "Hash mismatch on request, got %s but expected %s", result, expected
-            )
-            await self.__error_response__(
-              recv, send, "Hash digest did not match expected"
-            )
+            logger.debug("Hash mismatch on request, got %s but expected %s", result, expected)
+            await self.__error_response__(recv, send, "Hash digest did not match expected")
             return {"type": "http.disconnect"}
       return response
 
     return responder
 
-  async def __error_response__(
-    self, recv: Callable, send: Callable, message: str
-  ) -> None:
+  async def __error_response__(self, recv: Callable, send: Callable, message: str) -> None:
     bstr = message.encode()
     await send(
       {

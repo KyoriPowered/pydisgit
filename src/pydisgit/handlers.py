@@ -19,9 +19,7 @@ def ping(zen, hook, repository, sender, organization=None) -> EmbedBody:
   is_org = hook["type"] == "Organization"
   name = organization["login"] if is_org else repository["full_name"]
 
-  return EmbedBody(
-    f"[{name}] {hook['type']} hook ping received", None, sender, 0xB8E98C, zen
-  )
+  return EmbedBody(f"[{name}] {hook['type']} hook ping received", None, sender, 0xB8E98C, zen)
 
 
 check_run_action = router.by_action("check_run")
@@ -73,10 +71,10 @@ def check_completed(env: BoundEnv, check_run, repository, sender) -> EmbedBody:
 
   fields = [Field(name="Action Name", value=check_run["name"])]
 
-  if "title" in output and output["title"]:
+  if output.get("title"):
     fields.append(Field(name="Output Title", value=output["title"]))
 
-  if "summary" in output and output["summary"]:
+  if output.get("summary"):
     fields.append(Field(name="Output Summary", value=output["summary"]))
 
   return EmbedBody(
@@ -113,9 +111,7 @@ def create_branch(env: BoundEnv, ref, ref_type, repository, sender):
   if ref_type == "branch" and env.ignored_branch(ref):
     return None
 
-  return EmbedBody(
-    f"[{repository['full_name']}] New {ref_type} created: {ref}", None, sender, 0x000001
-  )
+  return EmbedBody(f"[{repository['full_name']}] New {ref_type} created: {ref}", None, sender, 0x000001)
 
 
 @router.handler("delete")
@@ -123,9 +119,7 @@ def delete_branch(env: BoundEnv, ref, ref_type, repository, sender):
   if ref_type == "branch" and env.ignored_branch(ref):
     return None
 
-  return EmbedBody(
-    f"[{repository['full_name']}] {ref_type} deleted: {ref}", None, sender, 0x000001
-  )
+  return EmbedBody(f"[{repository['full_name']}] {ref_type} deleted: {ref}", None, sender, 0x000001)
 
 
 discussion_action = router.by_action("discussion")
@@ -530,11 +524,11 @@ def gollum(pages, sender, repository):
       # Set the color to orange.
       color = 0xFCB900
     case (a, b) if a > 0 and b > 0:
-      message = f"{created} page{'s' if created > 1 else ''} were created and {edited} {'were' if edited > 1 else 'was'} edited"
-    case _:
       message = (
-        f"{max(created, edited)} pages were {'created' if created > 0 else 'edited'}"
+        f"{created} page{'s' if created > 1 else ''} were created and {edited} {'were' if edited > 1 else 'was'} edited"
       )
+    case _:
+      message = f"{max(created, edited)} pages were {'created' if created > 0 else 'edited'}"
 
   # Prepend the repository title to the message.
   message = f"[{repository['full_name']}] {message}"

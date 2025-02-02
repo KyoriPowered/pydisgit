@@ -34,9 +34,7 @@ class BoundEnv:
   __github_webhook_secret: str
 
   def __init__(self, env, logger):
-    self.__ignored_branch_pattern = (
-      re.compile(env["IGNORED_BRANCH_REGEX"]) if "IGNORED_BRANCH_REGEX" in env else None
-    )
+    self.__ignored_branch_pattern = re.compile(env["IGNORED_BRANCH_REGEX"]) if "IGNORED_BRANCH_REGEX" in env else None
     self.__ignored_branches = env["IGNORED_BRANCHES"].split(",")
     self.__ignored_users = env["IGNORED_USERS"].split(",")
     self.__ignored_payloads = env["IGNORED_PAYLOADS"].split(",")

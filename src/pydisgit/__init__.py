@@ -18,7 +18,7 @@ app.config.from_prefixed_env(prefix="PYDISGIT")
 bound = BoundEnv(app.config, app.logger)
 app.asgi_app = HmacVerifyMiddleware(app.asgi_app, bound.github_webhook_secret)
 
-from .handlers import router as free_handler_router  # noqa: E402, I001
+from .handlers import router as free_handler_router  # noqa: E402
 
 handler_router = free_handler_router.bind(bound, app.logger)
 
@@ -71,15 +71,11 @@ async def gh_hook(hook_id: str, token: str) -> dict:
 
   http: AsyncClient = app.http_client
 
-  result = await http.post(
-    f"https://discord.com/api/webhooks/{hook_id}/{token}", json=embed
-  )
+  result = await http.post(f"https://discord.com/api/webhooks/{hook_id}/{token}", json=embed)
 
   if result.status_code in (200, 204):
     result_text = "".join([await a async for a in result.aiter_text()])
-    return {
-      "message": f"We won! Webhook {hook_id} executed with token {token} :3, response: {result_text}"
-    }, 200
+    return {"message": f"We won! Webhook {hook_id} executed with token {token} :3, response: {result_text}"}, 200
   else:
     return Response(
       response=await result.aread(),
