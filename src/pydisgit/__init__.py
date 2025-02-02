@@ -18,7 +18,7 @@ app.config.from_prefixed_env(prefix="PYDISGIT")
 bound = BoundEnv(app.config, app.logger)
 app.asgi_app = HmacVerifyMiddleware(app.asgi_app, bound.github_webhook_secret)
 
-from .handlers import router as free_handler_router # noqa: E402, I001
+from .handlers import router as free_handler_router  # noqa: E402, I001
 
 handler_router = free_handler_router.bind(bound, app.logger)
 
