@@ -34,7 +34,7 @@ jobs:
           else
             REPORTER="github-check"
           fi
-          poetry run ruff format --diff | reviewdog -reporter=github-pr-revi -f=diff -f.diff.strip=0 -name=ruff-format -filter-mode=nofilter -fail-level=error
+          poetry run ruff format --diff | reviewdog -reporter=$REPORTER -f=diff -f.diff.strip=0 -name=ruff-format -filter-mode=nofilter -fail-level=error
       - name: "run ruff / check"
         if: "${{ always() && steps.install.conclusion == 'success' }}"
         run: "poetry run ruff check --output-format=github"
