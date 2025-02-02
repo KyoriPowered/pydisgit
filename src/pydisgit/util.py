@@ -1,7 +1,5 @@
-from dataclasses import dataclass
-from hmac import HMAC
 import re
-from typing import NamedTuple, Optional
+from typing import Optional
 
 __NEWLINE_REGEXP = re.compile(r"<!--(?:.|\n|\r)*?-->[\n|\r]*")
 

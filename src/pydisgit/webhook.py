@@ -2,11 +2,11 @@
 Core logic for webhook handling
 """
 
+import inspect
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from logging import Logger
-from typing import Any, Optional, NamedTuple
-import inspect
+from typing import Any, NamedTuple, Optional
 
 from .conf import BoundEnv
 from .util import truncate

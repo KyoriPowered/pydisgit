@@ -2,9 +2,8 @@
 Configuration for pydisgit
 """
 
-from typing import Optional
-import logging
 import re
+from typing import Optional
 
 
 class Config:

@@ -5,6 +5,7 @@ ASGI middleware to verify HMAC signatures from GH
 import hmac
 import logging
 from collections.abc import Callable
+
 from hypercorn.typing import Scope
 
 logger = logging.getLogger(__name__)
