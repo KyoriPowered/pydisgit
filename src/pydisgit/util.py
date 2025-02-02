@@ -14,7 +14,7 @@ def truncate(text: str, num: int) -> Optional[str]:
   if len(text) <= num:
     return text
 
-  return text[0:num - 3] + "..."
+  return text[0 : num - 3] + "..."
 
 
 def short_commit(hash: str) -> str:
@@ -24,6 +24,8 @@ def short_commit(hash: str) -> str:
 # make into middleware
 async def validate_request(request, secret: str) -> bool:
   pass
+
+
 #   signature_header = request.headers.get("X-Hub-Signature-256")?.substring("sha256=".length);
 #
 #  if not signature_header: return False
