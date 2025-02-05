@@ -32,3 +32,6 @@ indent-width = 2
 [tool.ruff.lint]
 select = [ "ASYNC", "E", "F", "I", "RUF" ]
 ignore = [ "E501" ]
+
+[tool.mdformat]
+end_of_line = "keep"

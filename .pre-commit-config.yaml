@@ -30,3 +30,10 @@ repos:
     language: "system"
     pass_filenames: false
     files: ^(.*/)?(poetry\.lock|pyproject\.toml)$
+- repo: "https://github.com/hukkin/mdformat"
+  rev: "0.7.22"
+  hooks:
+  - id: "mdformat"
+    additional_dependencies:
+    - mdformat-gfm
+    - mdformat-pyproject
