@@ -215,8 +215,14 @@ def issues_reopened(issue, repository, sender):
 
 @issues_action("closed")
 def issues_closed(issue, repository, sender):
+  match issue:
+    case {"state_reason": "not_planned"}:
+      reason = "not planned"
+    case _:
+      reason = "completed"
+
   return EmbedBody(
-    f"[{repository['full_name']}] Issue closed: #{issue['number']} {issue['title']}",
+    f"[{repository['full_name']}] Issue closed as {reason}: #{issue['number']} {issue['title']}",
     issue["html_url"],
     sender,
     0xFF482F,
@@ -267,6 +273,7 @@ def pull_request_opened(env: BoundEnv, pull_request, repository, sender):
     pull_request["html_url"],
     sender,
     color,
+    pull_request["body"],
   )
 
 
@@ -390,7 +397,7 @@ def push(env: BoundEnv, commits, forced, after, repository, ref, compare, sender
   for commit in commits:
     commit_url = commit["url"]
     line = f"[`{short_commit(commit['id'])}`]({commit_url}) {truncate(commit['message'].split('\n')[0], 50)} - {commit['author']['username']}\n"
-    if (len(description) + len(line)) >= 1500:
+    if (len(description) + len(line)) >= 1000:
       break
 
     last_commit_url = commit_url
