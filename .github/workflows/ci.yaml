@@ -10,6 +10,10 @@ permissions:
   contents: "read"
   packages: "write"
 
+env:
+  IMAGE_NAMESPACE: "ghcr.io/kyoripowered"
+  IMAGE_NAME: "pydisgit"
+
 jobs:
   build:
     # Only run on PRs if the source branch is on someone else's repo
@@ -19,17 +23,26 @@ jobs:
       - name: "setup"
         id: "setup"
         uses: "KyoriPowered/.github/.github/actions/setup-python-env@trunk"
-      - name: "install deps"
+      - name: "install deps / poetry"
         run: "poetry install"
-      - name: "setup / login to ghcr"
-        if: "${{ github.event_name == 'push' && steps.setup.outputs.publishing_branch != ''}}"
-        uses: "docker/login-action@v3.3.0"
+      - name: "install deps / qemu"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+      - name: "container / build"
+        uses: "redhat-actions/buildah-build@v2.13"
+        id: "build-image"
         with:
-          registry: "ghcr.io"
+          image: "${{ env.IMAGE_NAME }}"
+          tags: latest
+          platforms: linux/amd64, linux/arm64
+          containerfiles: ./Dockerfile
+      - name: "container / push"
+        if: "${{ github.event_name == 'push' && steps.setup.outputs.publishing_branch != ''}}"
+        uses: "redhat-actions/push-to-registry@v2.8"
+        with:
+          image: "${{ steps.build-image.outputs.image}}"
+          tags: "${{ steps.build-image.outputs.tags }}"
+          registry: "${{ env.IMAGE_NAMESPACE }}"
           username: "${{ github.actor }}"
           password: "${{ secrets.GITHUB_TOKEN }}"
-      - name: "docker / build"
-        run: "docker build -t ghcr.io/kyoripowered/pydisgit ."
-      - name: "docker / push"
-        if: "${{ github.event_name == 'push' && steps.setup.outputs.publishing_branch != ''}}"
-        run: "docker push ghcr.io/kyoripowered/pydisgit"
