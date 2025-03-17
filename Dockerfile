@@ -1,4 +1,4 @@
-FROM python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655dd003d0e28cf8652 as builder
+FROM python:3.13.2-slim as builder
 
 # environment
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -14,7 +14,7 @@ COPY src/ ./src/
 COPY README.md ./
 RUN poetry build -f wheel
 
-FROM python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655dd003d0e28cf8652
+FROM python:3.13.2-slim
 
 ENV APP_NAME=pydisgit
 ENV HOME=/home/${APP_NAME}
