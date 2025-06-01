@@ -75,7 +75,7 @@ async def gh_hook(hook_id: str, token: str) -> dict:
 
   if result.status_code in (200, 204):
     result_text = "".join([await a async for a in result.aiter_text()])
-    return {"message": f"We won! Webhook {hook_id} executed with token {token} :3, response: {result_text}"}, 200
+    return {"message": f"We won! Webhook {hook_id} executed :3, response: {result_text}"}, 200
   else:
     return Response(
       response=await result.aread(),
