@@ -1,4 +1,4 @@
-FROM python:3.13.3-slim as builder
+FROM python:3.13.5-slim as builder
 
 # environment
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -14,7 +14,7 @@ COPY src/ ./src/
 COPY README.md ./
 RUN poetry build -f wheel
 
-FROM python:3.13.3-slim
+FROM python:3.13.5-slim
 
 ENV APP_NAME=pydisgit
 ENV HOME=/home/${APP_NAME}
