@@ -9,7 +9,7 @@ license = "Apache-2.0"
 readme = "README.md"
 requires-python = ">= 3.12"
 dependencies = [
-  "quart [dotenv] ~= 0.20.0",
+  "quart [dotenv] ~=0.23.1",
   "httpx (>=0.28.1,<0.29.0)",
   "hypercorn[uvloop] (>=0.18.0,<0.19.0)"
 ]
